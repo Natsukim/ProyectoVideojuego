@@ -1,0 +1,194 @@
+material <Stone-masonry>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture Stone-masonry.jpg
+         }
+      }
+   }
+}
+
+material <Siding2>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture Siding2.jpg
+         }
+      }
+   }
+}
+
+material <GAF_Marquis>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture GAF-MarquisWeatherMaxShngl.jpg
+         }
+      }
+   }
+}
+
+material <Stucco>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture Stucco.jpg
+         }
+      }
+   }
+}
+
+material <NavajoWhite>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1.0 0.870588235294118 0.67843137254902 1.0
+         ambient 1.0 0.870588235294118 0.67843137254902 1.0
+      }
+   }
+}
+
+material Material3
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture side_v2.1.jpg
+         }
+      }
+   }
+}
+
+material <Gray_Glass>
+{
+   technique
+   {
+      pass
+      {
+         scene_blend alpha_blend
+         depth_check on
+         depth_write off
+         diffuse 0.501960784313725 0.501960784313725 0.501960784313725 0.5
+         ambient 0.501960784313725 0.501960784313725 0.501960784313725 0.5
+      }
+   }
+}
+
+material <White>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1.0 1.0 1.0 1.0
+         ambient 1.0 1.0 1.0 1.0
+      }
+   }
+}
+
+material elevator
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture elevator.jpg
+         }
+      }
+   }
+}
+
+material <Concrete>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture Concrete.jpg
+         }
+      }
+   }
+}
+
+material <Gray>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 0.501960784313725 0.501960784313725 0.501960784313725 1.0
+         ambient 0.501960784313725 0.501960784313725 0.501960784313725 1.0
+      }
+   }
+}
+
+material <Plant_Cover_Kudzu>
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1 1 1 1.0
+         texture_unit
+         {
+            texture Kudzu-Tile.jpg
+         }
+      }
+   }
+}
+
+material SketchupDefault
+{
+   technique
+   {
+      pass
+      {
+         diffuse 1.0 1.0 1.0
+         ambient 1.0 1.0 1.0
+      }
+   }
+}
+
+material SketchupDefault_Back
+{
+   technique
+   {
+      pass
+      {
+         diffuse 0.670588235294118 0.690196078431373 0.8
+         ambient 0.670588235294118 0.690196078431373 0.8
+      }
+   }
+}
