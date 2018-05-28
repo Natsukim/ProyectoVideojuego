@@ -502,14 +502,20 @@ public class Main extends SimpleApplication {
             }
             //posicion lineas
             for(int i=0; i<20; i++){
-                gLinea[i].setLocalTranslation(new Vector3f(-47.5f, 40f,300f));
+                gLinea[i].setLocalTranslation(new Vector3f(-47.5f, 40 ,298f));                
             }
+            
+            
+            //Rotar los numeros, porque estaban al reves al trasladarlo a este proyecto
+            for(int i = 0; i < 20 ; i++){
+                gNumeros[i].setLocalRotation(new Quaternion().fromAngles(0f, 84.8f, 0));
+            }
+                 
 
             //--- Numeros
-            gNumeros[19].setLocalTranslation(new Vector3f(-25f,21f,112f));
-            gNumeros[19].setLocalRotation(new Quaternion().fromAngles(0f, 180f, 1));
-            gNumeros[0].setLocalTranslation(new Vector3f(-50f,70f,290f));
-            gNumeros[17].setLocalTranslation(new Vector3f(17.5f,65f,-150f));
+            gNumeros[19].setLocalTranslation(new Vector3f(-47.5f,2f,20f));                        
+            gNumeros[0].setLocalTranslation(new Vector3f(-50.5f,2f,20f));
+            gNumeros[17].setLocalTranslation(new Vector3f(-40.5f,2f,20f));
             gNumeros[3].setLocalTranslation(new Vector3f(25f,57f,-150f));
             gNumeros[12].setLocalTranslation(new Vector3f(30f,48f,-150f));
             gNumeros[5].setLocalTranslation(new Vector3f(31.5f,38f,-150f)); //----PI/2

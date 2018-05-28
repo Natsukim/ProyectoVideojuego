@@ -37,7 +37,7 @@ public class Coche{
     Spatial coche;    
     Vector3f[] posIniC = new Vector3f[]{new Vector3f(-46, -4.5f, -60f),new Vector3f(-50, -4.5f,-69f),new Vector3f(0,4.5f,0),new Vector3f(0,4.5f,10f)};
     Timer tiempoParado=new Timer();    
-    float velocidad=1f;        
+    float velocidad=3f;        
     tipoArma tipoA;    
     boolean cam,esquivar;  
     
