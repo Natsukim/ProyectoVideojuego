@@ -513,26 +513,32 @@ public class Main extends SimpleApplication {
                  
 
             //--- Numeros
-            gNumeros[19].setLocalTranslation(new Vector3f(-47.5f,2f,20f));                        
-            gNumeros[0].setLocalTranslation(new Vector3f(-50.5f,2f,20f));
-            gNumeros[17].setLocalTranslation(new Vector3f(-40.5f,2f,20f));
-            gNumeros[3].setLocalTranslation(new Vector3f(25f,57f,-150f));
-            gNumeros[12].setLocalTranslation(new Vector3f(30f,48f,-150f));
-            gNumeros[5].setLocalTranslation(new Vector3f(31.5f,38f,-150f)); //----PI/2
-            gNumeros[9].setLocalTranslation(new Vector3f(30f,28f,-150f));
-            gNumeros[14].setLocalTranslation(new Vector3f(25f,18f,-150f));
-            gNumeros[1].setLocalTranslation(new Vector3f(17.5f,10.5f,-150f));
-            gNumeros[16].setLocalTranslation(new Vector3f(7.5f,5.5f,-150f));
-            gNumeros[2].setLocalTranslation(new Vector3f(-2.5f,4f,-150f)); //--- PI
-            gNumeros[18].setLocalTranslation(new Vector3f(-12.5f,5.5f,-150f));
-            gNumeros[6].setLocalTranslation(new Vector3f(-22.5f,10.5f,-150f));
-            gNumeros[15].setLocalTranslation(new Vector3f(-30f,18f,-150f));
-            gNumeros[7].setLocalTranslation(new Vector3f(-35f,28f,-150f));
-            gNumeros[10].setLocalTranslation(new Vector3f(-36.5f,38f,-150f)); //----3PI/2
-            gNumeros[13].setLocalTranslation(new Vector3f(-35f,48f,-150f));
-            gNumeros[8].setLocalTranslation(new Vector3f(-30f,57f,-150f));
-            gNumeros[11].setLocalTranslation(new Vector3f(-22.5f,65f,-150f));
-            gNumeros[4].setLocalTranslation(new Vector3f(-12.5f,70f,-150f));
+            gNumeros[19].setLocalTranslation(new Vector3f(-45f,70.8f,298f));                        
+            gNumeros[0].setLocalTranslation(new Vector3f(-53.9f,69.5f,298f));
+            gNumeros[17].setLocalTranslation(new Vector3f(-64.6f,64.3f,298f));
+            
+            gNumeros[3].setLocalTranslation(new Vector3f(-70.5f,58f,298f));
+            gNumeros[12].setLocalTranslation(new Vector3f(-76.5f,47.5f,298f));
+            gNumeros[5].setLocalTranslation(new Vector3f(-78f,38f,298f)); //----PI/2
+            
+            gNumeros[9].setLocalTranslation(new Vector3f(-77f,28f,298f));
+            gNumeros[14].setLocalTranslation(new Vector3f(-73.2f,19.4f,298f));
+            gNumeros[1].setLocalTranslation(new Vector3f(-65f,9.9f,298f));
+            
+            gNumeros[16].setLocalTranslation(new Vector3f(-56.5f,5.5f,298f));
+            gNumeros[2].setLocalTranslation(new Vector3f(-45.7f,3.4f,298f)); //--- PI
+            gNumeros[18].setLocalTranslation(new Vector3f(-36f,5f,298f));
+            
+            gNumeros[6].setLocalTranslation(new Vector3f(-27f,10f,298f));
+            gNumeros[15].setLocalTranslation(new Vector3f(-18.5f,18f,298f));
+            gNumeros[7].setLocalTranslation(new Vector3f(-12.5f,27.7f,298f));  
+            
+            gNumeros[10].setLocalTranslation(new Vector3f(-12f,38f,298f)); //----3PI/2
+            gNumeros[13].setLocalTranslation(new Vector3f(-13.5f,47f,298f));
+            gNumeros[8].setLocalTranslation(new Vector3f(-17.2f,57f,298f));
+            
+            gNumeros[11].setLocalTranslation(new Vector3f(-24.8f,64.7f,298f));
+            gNumeros[4].setLocalTranslation(new Vector3f(-34.7f,69.6f,298f));
         }
     }
     
