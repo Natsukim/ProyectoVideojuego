@@ -11,7 +11,6 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -42,7 +41,6 @@ public class Main extends SimpleApplication {
     private RigidBodyControl metaFisica;
     private Coche coche2,coche1;
     private Ruta nav,nav2;
-    private Caja cajaCoche2,cajaCoche1;
     private Regalo regalo1,regalo2;
     private Spatial suelo;        
     private Audio audio;
@@ -101,11 +99,6 @@ public class Main extends SimpleApplication {
         
         rootNode.addLight(sun1);
         rootNode.addLight(sun2);
-        
-        
-    //carga la escena del mapa           
-       // Spatial mundo = assetManager.loadModel("Scenes/mapCity.j3o");        
-        //rootNode.attachChild(mundo);        
 
     //carga esqueleto mapa y da propiedades
         suelo = assetManager.loadModel("Scenes/colision.j3o");
@@ -115,52 +108,18 @@ public class Main extends SimpleApplication {
         sueloFisico.setRestitution(0.9f);
         sueloFisico.setFriction(0.5f);
         
-    //crear meta
-    /*
-        Box bal=new Box(0.4f,0.4f,0.4f);
-        meta = new Geometry("Meta", bal);
-        metaFisica = new RigidBodyControl(0f);
-        meta.setCullHint(Spatial.CullHint.Always);
-        integrarObjeto(meta, metaFisica, estadosFisicos, null, "");        
-        */       
-        
     //crear ruta para coches
         nav = new Ruta(0);
         integrarObjeto(nav.objetivoGeom, nav.objFisico, estadosFisicos, nav.posicionActual(), "");
         nav.aplicarFisica();
         
-        /*
-        nav2 = new Ruta(1);
-        integrarObjeto(nav2.objetivoGeom, nav2.objFisico, estadosFisicos, nav2.posicionActual(), "");
-        nav2.aplicarFisica();
-        */
     //crear coche1        
         coche1 = new Coche(assetManager.loadModel("Models/Buggy/Buggy.j3o"),"Coche1",nav);
         integrarObjeto(coche1.coche, coche1.cocheFisico, estadosFisicos, coche1.posIniC[0], 0);
         integrarObjeto(coche1.geomBola, coche1.bolaFisica, estadosFisicos, coche1.posIniC[2], "");
         coche1.aplicarFisica();        
         coche1.cam = true;
-        
-    //crear coche2                       
-        /*coche2=new Coche(assetManager.loadModel("Models/Buggy/Buggy.j3o"), "Coche2", nav2);
-        integrarObjeto(coche2.coche, coche2.cocheFisico, estadosFisicos, coche2.posIniC[1],0);
-        integrarObjeto(coche2.geomBola, coche2.bolaFisica, estadosFisicos,coche2.posIniC[3],"");
-        coche2.aplicarFisica();                            
-          */      
-    //crear arma coche1                          
-            //caja coche1
-        cajaCoche1 = new Caja("CajaCoche1", 0);
-        integrarObjeto(cajaCoche1.balaG, cajaCoche1.balaFisica, estadosFisicos, cajaCoche1.posIniC[0], "caja");        
-        cajaCoche1.aplicarFisicaC();
-        
-    //crear Arma coche2                            
-            //caja coche2
-        
-            /*cajaCoche2 = new Caja("CajaCoche2", 1);
-        integrarObjeto(cajaCoche2.balaG, cajaCoche2.balaFisica, estadosFisicos, cajaCoche2.posIniC[1], "caja");        
-        cajaCoche2.aplicarFisicaC();
-              */
-            
+
     //crear regalos        
         regalo1 = new Regalo(assetManager.loadModel("Models/Teapot/Teapot.obj"),"Regalo1");                                                
         integrarObjeto(regalo1.regalo, regalo1.regaloFisico, estadosFisicos, regalo1.posicionActual(),0);
@@ -172,7 +131,7 @@ public class Main extends SimpleApplication {
         regalo2.propiedades();
                 
     //crear colision    
-        colision = new Colision(coche1,coche2,cajaCoche1,cajaCoche2,regalo1,regalo2);
+        colision = new Colision(coche1,coche2,regalo1,regalo2);
         estadosFisicos.getPhysicsSpace().addCollisionListener(colision);                           
         
     //cargar Teclado
@@ -225,48 +184,8 @@ public class Main extends SimpleApplication {
         if(rayoD_Coche1.getClosestCollision()!=null){
             distancia_Coche1_Der=rayoD_Coche1.getClosestCollision().getDistance();        
         }                
-     /*   
-    //Detecta enemigo un obstaculo
-        CollisionResults detecta_Coche1_M = new CollisionResults();        
-        coche2.coche.collideWith(coche1.rayoObstaculo(),detecta_Coche1_M);
-        CollisionResults detecta_Coche1_CC = new CollisionResults();
-        cajaCoche1.balaG.collideWith(coche1.rayoObstaculo(), detecta_Coche1_CC);
-        CollisionResults detecta_Coche1_CM = new CollisionResults();
-        cajaCoche2.balaG.collideWith(coche1.rayoObstaculo(), detecta_Coche1_CM);
+  
         
-        coche1.esquivo(detecta_Coche1_M,detecta_Coche1_CC,detecta_Coche1_CM,posCoche2,cajaCoche1.balaG.getLocalTranslation(),
-                                                cajaCoche2.balaG.getLocalTranslation(),distancia_Coche1_Izq,distancia_Coche1_Der);   
-       */ 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-        
-//Rayos coche Coche2-------------------------------------------------------------------------------------------------------------
-    /*
-    //Detecta distancia con pared del coche enemigo
-        CollisionResults rayoI_Coche2= new CollisionResults();
-        suelo.collideWith(coche2.rayosIzq(),rayoI_Coche2);
-        float distancia_Coche2_Izq=0;        
-        if (rayoI_Coche2.getClosestCollision() != null){
-            distancia_Coche2_Izq=rayoI_Coche2.getClosestCollision().getDistance();
-        }        
-        CollisionResults rayoD_Coche2 = new CollisionResults();
-        suelo.collideWith(coche2.rayosDer(),rayoD_Coche2);
-        float distancia_Coche2_Der=0;
-        if(rayoD_Coche2.getClosestCollision()!=null){
-            distancia_Coche2_Der=rayoD_Coche2.getClosestCollision().getDistance();        
-        }                
-        
-    //Detecta enemigo un obstaculo
-        CollisionResults detecta_Coche2_C = new CollisionResults();        
-        coche1.coche.collideWith(coche2.rayoObstaculo(),detecta_Coche2_C);
-        CollisionResults detecta_Coche2_CC = new CollisionResults();
-        cajaCoche1.balaG.collideWith(coche2.rayoObstaculo(), detecta_Coche2_CC);
-        CollisionResults detecta_Coche2_CM = new CollisionResults();
-        cajaCoche2.balaG.collideWith(coche2.rayoObstaculo(), detecta_Coche2_CM);
-        
-        coche2.esquivo(detecta_Coche2_C,detecta_Coche2_CC,detecta_Coche2_CM,posCoche1,cajaCoche1.balaG.getLocalTranslation(),
-                                                cajaCoche2.balaG.getLocalTranslation(),distancia_Coche2_Izq,distancia_Coche2_Der);        
-        
-        */
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 //AQUI PARA LA CAJA-----
@@ -274,15 +193,9 @@ public class Main extends SimpleApplication {
     //Lanzar caja para defensa Coche1
         float regalo1_Coche1 = coche1.cocheFisico.getPhysicsLocation().distance(regalo1.regaloFisico.getPhysicsLocation());
         float regalo2_Coche1 = coche1.cocheFisico.getPhysicsLocation().distance(regalo2.regaloFisico.getPhysicsLocation());        
-        Vector3f pos_CCoche1 = cajaCoche1.orientarCaja(posCoche1, nav.id);        
-        cajaCoche1.defensa(regalo1_Coche1,regalo2_Coche1,pos_CCoche1);        
-/*
-    //Lanzar caja para defensa Coche2
-        float regalo1_Coche2 = coche2.cocheFisico.getPhysicsLocation().distance(regalo1.regaloFisico.getPhysicsLocation());
-        float regalo2_Coche2 = coche2.cocheFisico.getPhysicsLocation().distance(regalo2.regaloFisico.getPhysicsLocation());                                       
-        Vector3f pos_CCoche2= cajaCoche2.orientarCaja(posCoche2,nav2.id);
-        cajaCoche2.defensa(regalo1_Coche2,regalo2_Coche2,pos_CCoche2);                          
-    */    
+       // Vector3f pos_CCoche1 = cajaCoche1.orientarCaja(posCoche1, nav.id);        
+      //  cajaCoche1.defensa(regalo1_Coche1,regalo2_Coche1,pos_CCoche1);        
+
 //HASTA AQUI PARA TIRAR LA CAJA        
 
 
@@ -299,14 +212,7 @@ public class Main extends SimpleApplication {
                 cocheParado = true;
                 
             }
-/*
-    //Navegacion Enemigo
-            float distancia_NavCoche2= coche2.cocheFisico.getPhysicsLocation().distance(nav2.objFisico.getPhysicsLocation());
-            nav2.cambiarPos(distancia_NavCoche2);
-            coche2.avanzar(regalo1_Coche2,regalo2_Coche2,regalo1.regalo.getLocalTranslation(),regalo2.regalo.getLocalTranslation());                   
-        
-     */                              
-        
+            
     //actualizador semaforo para Colisiones
         if(!colision.cambio){            
             colision.cambio=true;

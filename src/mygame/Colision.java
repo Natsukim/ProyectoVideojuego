@@ -18,17 +18,13 @@ import com.jme3.math.Vector3f;
 public class Colision implements PhysicsCollisionListener{
     boolean cambio;
     Coche coche1,coche2;
-    Caja cajaCoche1;
-    Caja cajaCoche2;
     Regalo regalo1;
     Regalo regalo2;
     
     
-    public Colision(Coche c1,Coche c2,Caja cc1,Caja cc2,Regalo s1,Regalo s2){        
+    public Colision(Coche c1,Coche c2,Regalo s1,Regalo s2){        
         coche1=c1;
-        coche2=c2;
-        cajaCoche1=cc1;
-        cajaCoche2=cc2;
+        coche2=c2;        
         regalo1=s1;
         regalo2=s2;
         cambio=true;
@@ -51,8 +47,7 @@ public class Colision implements PhysicsCollisionListener{
                    // coche1.tipoA=Coche.tipoArma.Caja;
                     
                 //Si el Regalo la coge Coche2
-                } else if(event.getNodeA().getName().equals("Coche2")){
-                    cajaCoche2.usar=true;
+                } else if(event.getNodeA().getName().equals("Coche2")){                    
                     coche2.tipoA=Coche.tipoArma.Caja;
                                         
                 }               
@@ -72,12 +67,12 @@ public class Colision implements PhysicsCollisionListener{
                 cambio=false;                
                 
                 if(event.getNodeA().getName().equals("Coche1")){
-                    cajaCoche1.posOrigen();
+                    
                     coche1.penalizacion();
                     System.out.println(event.getNodeB().getName()+" choco contra "+event.getNodeA().getName());
                     
                 }else if(event.getNodeA().getName().equals("Coche2")){
-                    cajaCoche1.posOrigen();
+                    
                     coche2.penalizacion();
                     System.out.println(event.getNodeB().getName()+" choco contra "+event.getNodeA().getName());                    
                 }
@@ -87,12 +82,12 @@ public class Colision implements PhysicsCollisionListener{
                 cambio=false;     
                 
                 if(event.getNodeA().getName().equals("Coche1")){
-                    cajaCoche2.posOrigen();
+                   
                     coche1.penalizacion();
                     System.out.println(event.getNodeB().getName()+" choco contra "+event.getNodeA().getName());
                     
                 } else if(event.getNodeA().getName().equals("Coche2")){
-                    cajaCoche2.posOrigen();
+                   
                     coche2.penalizacion();
                     System.out.println(event.getNodeB().getName()+" choco contra "+event.getNodeA().getName());                    
                 }
