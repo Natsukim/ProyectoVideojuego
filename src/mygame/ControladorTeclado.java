@@ -27,14 +27,7 @@ public class ControladorTeclado {
     AnalogListener analogListener = new AnalogListener(){
         @Override
         public void onAnalog(String name, float value, float tpf) {
-            
-            if (name.equals("Izquierda")) {
-               izquierda = true;
-            }
-            if (name.equals("CamCoche1")){
-               coche2.cam=false;
-               coche1.cam=true;
-            }
+                       
             if (name.equals("MuteOFF")){
                     audio.audio_base.setVolume(3);
                     
@@ -46,9 +39,5 @@ public class ControladorTeclado {
         }
     };   
 
-    public boolean isIzquierda() {
-        return izquierda;
-    }
-    
     
 }

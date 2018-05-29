@@ -161,10 +161,7 @@ public class Main extends SimpleApplication {
            this.flyCam.setRotationSpeed(2.5f);
            
        }
-        
-    
-       
-        
+               
         audio.inicio();
         
         
@@ -226,14 +223,10 @@ public class Main extends SimpleApplication {
         //TODO: add render cod  e
     }
     
-    private void inicTeclado() {
-        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
-        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
-        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
-        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S)); 
+    private void inicTeclado() {       
         inputManager.addMapping("MuteOFF", new KeyTrigger(KeyInput.KEY_N));
         inputManager.addMapping("MuteON", new KeyTrigger(KeyInput.KEY_M));                
-        inputManager.addListener(cntT.analogListener, "Left","Right","Up","Down","MuteOFF","MuteON");
+        inputManager.addListener(cntT.analogListener, "MuteOFF","MuteON");
     }
     
     public void integrarObjeto(Spatial objetoVisual, RigidBodyControl objetoFisico, BulletAppState estadosFisicos, Vector3f posicion, int giro) {
