@@ -5,6 +5,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -18,6 +20,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.shape.Line;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
@@ -48,11 +51,18 @@ public class Main extends SimpleApplication {
     private Audio audio;
     private RigidBodyControl sueloFisico;    
     private Colision colision;
+    public static float velocidadDesplazamiento=7f;
+    public static float velocidadRotacion=6.48f;
     private ControladorTeclado cntT;    
     float tiempo = 0; 
     Diana diana;
     boolean cocheParado = false;
-    
+    private Proyectil proyectil1;
+    private boolean disparando = false;
+    private RigidBodyControl proyectilFisico;
+    private RigidBodyControl[] dianaFisico;
+    private boolean choca = false;
+    public static boolean reiniciar =true;
     public static Main app = new Main();
      
     public static void main(String[] args) {
@@ -79,8 +89,14 @@ public class Main extends SimpleApplication {
     
         
     //Crear diana
-    diana = new Diana(0f, estadosFisicos, rootNode, assetManager);    
-        
+    diana = new Diana(0f, estadosFisicos, rootNode, assetManager);
+    dianaFisico = new RigidBodyControl[7];
+    for(int i=0; i<7; i++){
+        dianaFisico[i]= new RigidBodyControl(0f);
+        diana.gDiana[i].addControl(dianaFisico[i]);
+        estadosFisicos.getPhysicsSpace().add(dianaFisico[i]);
+        dianaFisico[i].setRestitution(0);
+    }
         
     //crear Audio        
         AudioNode audio_base = new AudioNode(assetManager, "Sounds/base2.wav", AudioData.DataType.Stream);
@@ -114,26 +130,12 @@ public class Main extends SimpleApplication {
         integrarObjeto(suelo, sueloFisico, estadosFisicos, new Vector3f(0f, -4.1f,0f), 0);
         sueloFisico.setRestitution(0.9f);
         sueloFisico.setFriction(0.5f);
-        
-    //crear meta
-    /*
-        Box bal=new Box(0.4f,0.4f,0.4f);
-        meta = new Geometry("Meta", bal);
-        metaFisica = new RigidBodyControl(0f);
-        meta.setCullHint(Spatial.CullHint.Always);
-        integrarObjeto(meta, metaFisica, estadosFisicos, null, "");        
-        */       
-        
+               
     //crear ruta para coches
         nav = new Ruta(0);
         integrarObjeto(nav.objetivoGeom, nav.objFisico, estadosFisicos, nav.posicionActual(), "");
         nav.aplicarFisica();
-        
-        /*
-        nav2 = new Ruta(1);
-        integrarObjeto(nav2.objetivoGeom, nav2.objFisico, estadosFisicos, nav2.posicionActual(), "");
-        nav2.aplicarFisica();
-        */
+    
     //crear coche1        
         coche1 = new Coche(assetManager.loadModel("Models/Buggy/Buggy.j3o"),"Coche1",nav);
         integrarObjeto(coche1.coche, coche1.cocheFisico, estadosFisicos, coche1.posIniC[0], 0);
@@ -141,26 +143,13 @@ public class Main extends SimpleApplication {
         coche1.aplicarFisica();        
         coche1.cam = true;
         
-    //crear coche2                       
-        /*coche2=new Coche(assetManager.loadModel("Models/Buggy/Buggy.j3o"), "Coche2", nav2);
-        integrarObjeto(coche2.coche, coche2.cocheFisico, estadosFisicos, coche2.posIniC[1],0);
-        integrarObjeto(coche2.geomBola, coche2.bolaFisica, estadosFisicos,coche2.posIniC[3],"");
-        coche2.aplicarFisica();                            
-          */      
     //crear arma coche1                          
             //caja coche1
         cajaCoche1 = new Caja("CajaCoche1", 0);
         integrarObjeto(cajaCoche1.balaG, cajaCoche1.balaFisica, estadosFisicos, cajaCoche1.posIniC[0], "caja");        
         cajaCoche1.aplicarFisicaC();
         
-    //crear Arma coche2                            
-            //caja coche2
-        
-            /*cajaCoche2 = new Caja("CajaCoche2", 1);
-        integrarObjeto(cajaCoche2.balaG, cajaCoche2.balaFisica, estadosFisicos, cajaCoche2.posIniC[1], "caja");        
-        cajaCoche2.aplicarFisicaC();
-              */
-            
+    
     //crear regalos        
         regalo1 = new Regalo(assetManager.loadModel("Models/Teapot/Teapot.obj"),"Regalo1");                                                
         integrarObjeto(regalo1.regalo, regalo1.regaloFisico, estadosFisicos, regalo1.posicionActual(),0);
@@ -178,6 +167,14 @@ public class Main extends SimpleApplication {
     //cargar Teclado
         cntT= new ControladorTeclado(coche1,coche2,audio);
         inicTeclado();
+        
+    //crear proyectil
+        proyectil1 = new Proyectil("Proyectil");
+        proyectilFisico = new RigidBodyControl(1f);
+        
+        integrarObjeto(proyectil1.gProyectil, proyectilFisico, estadosFisicos,null,"proyectil");
+        proyectilFisico.setRestitution(0f);
+        proyectil1.aplicarFisicaC();
    }
 
     @Override
@@ -196,11 +193,53 @@ public class Main extends SimpleApplication {
            cam.setLocation( parteTrasera );
            cam.lookAt( camP, Vector3f.UNIT_Y);
        } else {
-           this.flyCam.setEnabled(true);
-           cam.setLocation(new Vector3f(-47.5f, 0f, 110));
-           this.flyCam.setMoveSpeed(10);
-           this.flyCam.setRotationSpeed(10);
-           
+
+            if(disparando){
+                    Vector3f p = proyectilFisico.getPhysicsLocation();
+                    proyectilFisico.setPhysicsLocation(p);
+                    if(p.z>=290 ){
+                        if(!choca){                            
+                            proyectilFisico.setMass(0f);
+                            proyectilFisico.setGravity(new Vector3f(0f,-9.8f,0f));
+                            proyectilFisico.setLinearVelocity(new Vector3f(0f,9.8f*proyectilFisico.getMass(),0f));
+                            choca = true;
+                        }
+                        proyectilFisico.setPhysicsLocation(p);
+                    }
+
+                    //System.out.println("PosCuboLocal: "+proyectil1.gProyectil.getLocalTranslation());
+                    //System.out.println("PosCuboWorld: "+proyectil1.gProyectil.getWorldTranslation());
+            }else{
+                //Empieza el proceso de aprendizaje del disparo
+                
+                Aprendiz_polinomico a = new Aprendiz_polinomico();
+              
+                a.start();
+                                
+                if(reiniciar){
+
+                proyectil1.desaplicarFisicaC();
+                proyectilFisico.setPhysicsLocation(proyectil1.posIni);
+                proyectilFisico.setGravity(new Vector3f(0f,-9.8f,0f));
+                reiniciar=false;
+                }else{
+
+                proyectilFisico.applyImpulse(new Vector3f(0f,32.4f,35f),Vector3f.ZERO);
+                System.out.println(new Vector3f(0f, 32.4f, 35f).length());
+                disparando = true;
+                
+                  
+                
+                }
+          
+            
+              
+          }
+          
+            this.flyCam.setEnabled(true);
+            cam.setLocation(new Vector3f(-47.5f, 0f, 110));
+            this.flyCam.setMoveSpeed(10);
+            this.flyCam.setRotationSpeed(2.5f);
        }
         
     
@@ -225,48 +264,7 @@ public class Main extends SimpleApplication {
         if(rayoD_Coche1.getClosestCollision()!=null){
             distancia_Coche1_Der=rayoD_Coche1.getClosestCollision().getDistance();        
         }                
-     /*   
-    //Detecta enemigo un obstaculo
-        CollisionResults detecta_Coche1_M = new CollisionResults();        
-        coche2.coche.collideWith(coche1.rayoObstaculo(),detecta_Coche1_M);
-        CollisionResults detecta_Coche1_CC = new CollisionResults();
-        cajaCoche1.balaG.collideWith(coche1.rayoObstaculo(), detecta_Coche1_CC);
-        CollisionResults detecta_Coche1_CM = new CollisionResults();
-        cajaCoche2.balaG.collideWith(coche1.rayoObstaculo(), detecta_Coche1_CM);
-        
-        coche1.esquivo(detecta_Coche1_M,detecta_Coche1_CC,detecta_Coche1_CM,posCoche2,cajaCoche1.balaG.getLocalTranslation(),
-                                                cajaCoche2.balaG.getLocalTranslation(),distancia_Coche1_Izq,distancia_Coche1_Der);   
-       */ 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-        
-//Rayos coche Coche2-------------------------------------------------------------------------------------------------------------
-    /*
-    //Detecta distancia con pared del coche enemigo
-        CollisionResults rayoI_Coche2= new CollisionResults();
-        suelo.collideWith(coche2.rayosIzq(),rayoI_Coche2);
-        float distancia_Coche2_Izq=0;        
-        if (rayoI_Coche2.getClosestCollision() != null){
-            distancia_Coche2_Izq=rayoI_Coche2.getClosestCollision().getDistance();
-        }        
-        CollisionResults rayoD_Coche2 = new CollisionResults();
-        suelo.collideWith(coche2.rayosDer(),rayoD_Coche2);
-        float distancia_Coche2_Der=0;
-        if(rayoD_Coche2.getClosestCollision()!=null){
-            distancia_Coche2_Der=rayoD_Coche2.getClosestCollision().getDistance();        
-        }                
-        
-    //Detecta enemigo un obstaculo
-        CollisionResults detecta_Coche2_C = new CollisionResults();        
-        coche1.coche.collideWith(coche2.rayoObstaculo(),detecta_Coche2_C);
-        CollisionResults detecta_Coche2_CC = new CollisionResults();
-        cajaCoche1.balaG.collideWith(coche2.rayoObstaculo(), detecta_Coche2_CC);
-        CollisionResults detecta_Coche2_CM = new CollisionResults();
-        cajaCoche2.balaG.collideWith(coche2.rayoObstaculo(), detecta_Coche2_CM);
-        
-        coche2.esquivo(detecta_Coche2_C,detecta_Coche2_CC,detecta_Coche2_CM,posCoche1,cajaCoche1.balaG.getLocalTranslation(),
-                                                cajaCoche2.balaG.getLocalTranslation(),distancia_Coche2_Izq,distancia_Coche2_Der);        
-        
-        */
+
 //--------------------------------------------------------------------------------------------------------------------------------------
 
 //AQUI PARA LA CAJA-----
@@ -276,13 +274,7 @@ public class Main extends SimpleApplication {
         float regalo2_Coche1 = coche1.cocheFisico.getPhysicsLocation().distance(regalo2.regaloFisico.getPhysicsLocation());        
         Vector3f pos_CCoche1 = cajaCoche1.orientarCaja(posCoche1, nav.id);        
         cajaCoche1.defensa(regalo1_Coche1,regalo2_Coche1,pos_CCoche1);        
-/*
-    //Lanzar caja para defensa Coche2
-        float regalo1_Coche2 = coche2.cocheFisico.getPhysicsLocation().distance(regalo1.regaloFisico.getPhysicsLocation());
-        float regalo2_Coche2 = coche2.cocheFisico.getPhysicsLocation().distance(regalo2.regaloFisico.getPhysicsLocation());                                       
-        Vector3f pos_CCoche2= cajaCoche2.orientarCaja(posCoche2,nav2.id);
-        cajaCoche2.defensa(regalo1_Coche2,regalo2_Coche2,pos_CCoche2);                          
-    */    
+    
 //HASTA AQUI PARA TIRAR LA CAJA        
 
 
@@ -299,13 +291,6 @@ public class Main extends SimpleApplication {
                 cocheParado = true;
                 
             }
-/*
-    //Navegacion Enemigo
-            float distancia_NavCoche2= coche2.cocheFisico.getPhysicsLocation().distance(nav2.objFisico.getPhysicsLocation());
-            nav2.cambiarPos(distancia_NavCoche2);
-            coche2.avanzar(regalo1_Coche2,regalo2_Coche2,regalo1.regalo.getLocalTranslation(),regalo2.regalo.getLocalTranslation());                   
-        
-     */                              
         
     //actualizador semaforo para Colisiones
         if(!colision.cambio){            
@@ -388,7 +373,7 @@ public class Main extends SimpleApplication {
         return v;
     }
  
-    public class Diana extends RigidBodyControl implements PhysicsCollisionListener {
+    public class Diana /*extends RigidBodyControl implements PhysicsCollisionListener*/ {
         public boolean activarFisicas;
         public BulletAppState estadosFisicos;
         
@@ -401,23 +386,21 @@ public class Main extends SimpleApplication {
         public Node nDianaEntera = new Node();
         
         public Diana(float masa, BulletAppState estadosFisicos, Node rootNode, AssetManager assetManager){
-            super(masa);
             //--- Diana
+            //super(masa);
             for(int i=0; i<7; i++){
                 String nombre = "gDiana"+i;
                 gDiana[i] = new Geometry(nombre+i,new Cylinder(30, 40, 1f, 0.001f, true));
                 nDiana.attachChild(gDiana[i]);
             }
+            
+            this.estadosFisicos= estadosFisicos;
+            
             nDianaEntera.attachChild(nDiana);
             nDianaEntera.attachChild(nLineas);
             nDianaEntera.attachChild(nNumeros);
             rootNode.attachChild(nDianaEntera);
             crearDiana();
-        }
-
-        @Override
-        public void collision(PhysicsCollisionEvent event) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
         
         private void crearDiana(){
@@ -540,7 +523,5 @@ public class Main extends SimpleApplication {
             gNumeros[11].setLocalTranslation(new Vector3f(-24.8f,64.7f,298f));
             gNumeros[4].setLocalTranslation(new Vector3f(-34.7f,69.6f,298f));
         }
-    }
-    
-    
+    }   
 }

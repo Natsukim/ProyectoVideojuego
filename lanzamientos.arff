@@ -1,0 +1,5 @@
+@relation lanzamientos
+@attribute  angulo    numeric
+@attribute  velocidad numeric
+@attribute  distancia numeric
+@data

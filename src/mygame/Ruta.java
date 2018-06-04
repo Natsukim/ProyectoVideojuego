@@ -40,8 +40,8 @@ public class Ruta {
    }
    
    public void aplicarFisica(){
-       //objetivoGeom.setCullHint(Spatial.CullHint.Always);
-      // objFisico.setGravity(Vector3f.ZERO);
+       objetivoGeom.setCullHint(Spatial.CullHint.Always);
+       objFisico.setGravity(Vector3f.ZERO);
        
    }
  
